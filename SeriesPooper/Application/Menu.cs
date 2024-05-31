@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeriesPooper.Enumerations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -79,5 +80,22 @@ internal class Menu
     public static void DrawEmpty()
     {
         Console.WriteLine();
+    }
+
+    public static void DrawMenuItems(IEnumerable<MenuItems> items, int index = 0)
+    {
+        for (int i = 0; i < items.Count(); i++)
+        {
+            if (i == index)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.Write(" >> ");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+                Console.Write("    ");
+
+            Console.WriteLine(items.ElementAt(i).ToString());
+        }
     }
 }

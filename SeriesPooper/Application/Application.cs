@@ -2,12 +2,7 @@
 using SeriesPooper.Interface;
 using SeriesPooper.TestClass;
 using SeriesPooper.Utility;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeriesPooper.Application;
 
@@ -65,7 +60,9 @@ internal class Application : IApplication
 
     private void AwaitAction()
     {
+        _serieLibrary.ListRecentlyWatched();
         _serieLibrary.ListSeries();
+
     }
 
     private static void HandleException(Exception ex, string methodName)
