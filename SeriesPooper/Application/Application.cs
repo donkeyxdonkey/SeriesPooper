@@ -1,6 +1,7 @@
 ﻿using SeriesPooper.Enumerations;
 using SeriesPooper.Interface;
 using SeriesPooper.TestClass;
+using SeriesPooper.Utility;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,11 +9,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SeriesPooper;
+namespace SeriesPooper.Application;
+
 internal class Application : IApplication
 {
     #region ----- CONSTANTS
-    const string CONFIG_FILE = "config.yaml";
+    const string CONFIG_FILE = "series.yaml";
     #endregion
 
     #region ----- PROPERTIES
@@ -24,8 +26,8 @@ internal class Application : IApplication
 
     #region ----- FIELDS
     private State _state;
-    private FileInfo _config;
-    private SerieLibrary _serieLibrary;
+    private readonly FileInfo _config;
+    private readonly SerieLibrary _serieLibrary;
     #endregion
 
     #region ----- CONSTRUCTOR
@@ -66,6 +68,6 @@ internal class Application : IApplication
 
     private void Save()
     {
-        YamlParser.SaveConfig<SerieLibrary>(_serieLibrary, _config);
+        YamlParser.SaveConfig(_serieLibrary, _config);
     }
 }

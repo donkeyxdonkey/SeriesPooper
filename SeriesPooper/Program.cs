@@ -1,6 +1,5 @@
 ﻿using SeriesPooper;
 using SeriesPooper.Interface;
-using SeriesPooper.TestClass;
 
 internal class Program
 {

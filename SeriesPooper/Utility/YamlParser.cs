@@ -1,7 +1,7 @@
 ﻿using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace SeriesPooper;
+namespace SeriesPooper.Utility;
 
 public class YamlParser
 {
