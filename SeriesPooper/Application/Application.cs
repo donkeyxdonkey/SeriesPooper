@@ -46,9 +46,14 @@ internal class Application : IApplication
 
         try
         {
+            Menu.DrawSeparator();
+            Menu.Draw();
+            Menu.DrawSeparator();
+            Menu.DrawEmpty();
+
             do
             {
-
+                AwaitAction();
             } while (_state == State.Running);
         }
         catch (Exception ex)
@@ -56,6 +61,11 @@ internal class Application : IApplication
             StackFrame stackFrame = new(skipFrames: 1, needFileInfo: true);
             HandleException(ex, stackFrame.GetMethod()!.Name);
         }
+    }
+
+    private void AwaitAction()
+    {
+        _serieLibrary.ListSeries();
     }
 
     private static void HandleException(Exception ex, string methodName)

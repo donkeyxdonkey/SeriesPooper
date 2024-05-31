@@ -1,5 +1,5 @@
 ﻿namespace SeriesPooper.Interface;
 internal interface ISerieLibrary
 {
-    // TODO: fsdfdfdsfds
+    public void ListSeries();
 }

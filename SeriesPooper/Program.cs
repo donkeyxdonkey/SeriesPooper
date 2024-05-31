@@ -1,4 +1,4 @@
-﻿using SeriesPooper;
+﻿using SeriesPooper.Application;
 using SeriesPooper.Interface;
 
 internal class Program
