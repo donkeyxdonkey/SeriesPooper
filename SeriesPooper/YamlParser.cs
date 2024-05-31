@@ -6,19 +6,15 @@ namespace SeriesPooper;
 
 public class YamlParser
 {
-    public static T ParseConfig<T>(FileInfo config) => ParseConfig<T>(config, null);
-
-    public static T ParseConfig<T>(FileInfo config, INamingConvention? namingConventionNullDefault)
+    public static T ParseConfig<T>(FileInfo config)
     {
         if (!config.Exists)
             throw new FileNotFoundException($"Config not found: {config.FullName}");
 
         string contents = File.ReadAllText(config.FullName);
 
-        INamingConvention namingConvention = namingConventionNullDefault is not null ? namingConventionNullDefault : PascalCaseNamingConvention.Instance;
-
         IDeserializer deserializer = new DeserializerBuilder()
-            .WithNamingConvention(namingConvention)
+            .WithNamingConvention(PascalCaseNamingConvention.Instance)
             .Build();
 
         return deserializer.Deserialize<T>(contents);
@@ -27,14 +23,13 @@ public class YamlParser
     public static void SaveConfig<T>(T content, FileInfo config)
     {
         if (content is null)
-            throw new ArgumentNullException("glurp");
+            throw new ArgumentNullException("Config contained no content.");
 
         ISerializer serializer = new SerializerBuilder()
             .WithNamingConvention(PascalCaseNamingConvention.Instance)
             .Build();
-        string yaml = serializer.Serialize(content);
-        System.Console.WriteLine(yaml);
 
-        // TODO:
+        string yaml = serializer.Serialize(content);
+        File.WriteAllText(config.FullName, yaml);
     }
 }
