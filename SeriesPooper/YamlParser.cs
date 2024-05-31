@@ -1,5 +1,4 @@
-﻿using SeriesPooper.Interface;
-using YamlDotNet.Serialization;
+﻿using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
 namespace SeriesPooper;
