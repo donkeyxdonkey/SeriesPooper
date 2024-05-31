@@ -1,0 +1,57 @@
+Library:
+  - Name: "Breaking Bad"
+    Seasons:
+      - Id: 1
+        Episodes:
+          - Id: 1
+            Name: "Pilot"
+            Watched: true
+            DateWatched: "2023-01-01T00:00:00"
+          - Id: 2
+            Name: "Cat's in the Bag..."
+            Watched: true
+            DateWatched: "2023-01-02T00:00:00"
+          - Id: 3
+            Name: "...And the Bag's in the River"
+            Watched: false
+            DateWatched: null
+      - Id: 2
+        Episodes:
+          - Id: 1
+            Name: "Seven Thirty-Seven"
+            Watched: true
+            DateWatched: "2023-01-03T00:00:00"
+  - Name: "Stranger Things"
+    Seasons:
+      - Id: 1
+        Episodes:
+          - Id: 1
+            Name: "Chapter One: The Vanishing of Will Byers"
+            Watched: true
+            DateWatched: "2023-02-01T00:00:00"
+          - Id: 2
+            Name: "Chapter Two: The Weirdo on Maple Street"
+            Watched: false
+            DateWatched: null
+  - Name: "Game of Thrones"
+    Seasons:
+      - Id: 1
+        Episodes:
+          - Id: 1
+            Name: "Winter Is Coming"
+            Watched: true
+            DateWatched: "2023-03-01T00:00:00"
+          - Id: 2
+            Name: "The Kingsroad"
+            Watched: true
+            DateWatched: "2023-03-02T00:00:00"
+          - Id: 3
+            Name: "Lord Snow"
+            Watched: false
+            DateWatched: null
+      - Id: 2
+        Episodes:
+          - Id: 1
+            Name: "Cripples, Bastards, and Broken Things"
+            Watched: false
+            DateWatched: null
