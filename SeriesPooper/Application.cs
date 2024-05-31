@@ -18,18 +18,23 @@ internal class Application : IApplication
     }
 
     private State _state;
+    private FileInfo _config;
     private SerieLibrary _serieLibrary;
 
     public Application()
     {
-        FileInfo config = new(Path.Combine(AppContext.BaseDirectory, CONFIG_FILE));
-
         _state = State.Idle;
-        _serieLibrary = YamlParser.ParseConfig<SerieLibrary>(config);
+        _config = new(Path.Combine(AppContext.BaseDirectory, CONFIG_FILE));
+        _serieLibrary = YamlParser.ParseConfig<SerieLibrary>(_config);
     }
 
     public void Start()
     {
         _state = State.Running;
+
+        do
+        {
+
+        } while (_state == State.Running);
     }
 }

@@ -1,4 +1,5 @@
-﻿using YamlDotNet.Serialization;
+﻿using SeriesPooper.Interface;
+using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
 namespace SeriesPooper;
@@ -21,5 +22,10 @@ public class YamlParser
             .Build();
 
         return deserializer.Deserialize<T>(contents);
+    }
+
+    public static void SaveConfig(FileInfo config)
+    {
+        // TODO:
     }
 }
