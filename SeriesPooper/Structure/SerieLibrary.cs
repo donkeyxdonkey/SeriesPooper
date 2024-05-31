@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SeriesPooper.Interface;
 
 namespace SeriesPooper.TestClass;
 
-internal class SerieLibrary
+internal class SerieLibrary : ISerieLibrary
 {
+    #region ----- AUTO PROPERTIES
     public List<Serie>? Library { get; set; }
 
     internal class Serie
@@ -34,4 +31,5 @@ internal class SerieLibrary
             }
         }
     }
+    #endregion
 }
