@@ -3,6 +3,7 @@ using SeriesPooper.Interface;
 using SeriesPooper.TestClass;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,9 +33,24 @@ internal class Application : IApplication
     {
         _state = State.Running;
 
-        do
+        try
         {
+            do
+            {
 
-        } while (_state == State.Running);
+            } while (_state == State.Running);
+        }
+        catch (Exception ex)
+        {
+            StackFrame stackFrame = new(skipFrames: 1, needFileInfo: true);
+            HandleException(ex, stackFrame.GetMethod()!.Name);
+        }
+    }
+
+    private static void HandleException(Exception ex, string methodName)
+    {
+        Console.WriteLine($"Error in: {methodName}");
+        Console.WriteLine(ex.Message);
+        Console.WriteLine(ex.StackTrace);
     }
 }

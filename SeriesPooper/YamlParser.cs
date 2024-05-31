@@ -24,8 +24,17 @@ public class YamlParser
         return deserializer.Deserialize<T>(contents);
     }
 
-    public static void SaveConfig(FileInfo config)
+    public static void SaveConfig<T>(T content, FileInfo config)
     {
+        if (content is null)
+            throw new ArgumentNullException("glurp");
+
+        ISerializer serializer = new SerializerBuilder()
+            .WithNamingConvention(PascalCaseNamingConvention.Instance)
+            .Build();
+        string yaml = serializer.Serialize(content);
+        System.Console.WriteLine(yaml);
+
         // TODO:
     }
 }
