@@ -72,6 +72,7 @@ internal class Application : IApplication
         Console.WriteLine("END Reading args");
         Console.ReadLine();
         Console.Clear();
+        Console.SetCursorPosition(0, 0);
     }
     #endregion
 
@@ -89,11 +90,11 @@ internal class Application : IApplication
 
             _action = ApplicationAction.ListRecent;
 
-            do
+            while (_state == State.Running)
             {
                 AwaitAction();
                 HandleAction();
-            } while (_state == State.Running);
+            }
         }
         catch (Exception ex)
         {
@@ -126,6 +127,9 @@ internal class Application : IApplication
 
     private void HandleAction()
     {
+        if (_action == ApplicationAction.Exit)
+            return;
+
         ConsoleKey keyPressed = _keyListener.Listen();
 
         _action = _action switch
