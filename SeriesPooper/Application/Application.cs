@@ -42,7 +42,7 @@ internal class Application : IApplication
         if (args.Length == 0)
             return;
 
-        Console.WriteLine("BEGIN Reading args");
+        Console.WriteLine($"BEGIN Reading args{Environment.NewLine}");
 
         foreach (string arg in args.Select(arg => arg.ToLower()).ToArray())
         {
@@ -53,7 +53,7 @@ internal class Application : IApplication
                     backupDirectory.Create();
                     FileInfo backup = new(Path.Combine(backupDirectory.FullName, $"{DateTime.Now:yyyy-MM-dd}_{CONFIG_FILE}"));
                     File.Copy(_config.FullName, backup.FullName, overwrite: true);
-                    Console.WriteLine($"Backup performed: {backup.FullName}");
+                    Console.WriteLine($"Backup performed: {backup.FullName}{Environment.NewLine}");
                     break;
                 case "--enable-logging":
                     DirectoryInfo logsDirectory = new(Path.Combine(AppContext.BaseDirectory, "Logs"));
