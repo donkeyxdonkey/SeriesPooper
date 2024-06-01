@@ -3,6 +3,7 @@
 public enum ApplicationAction
 {
     None,
+    Menu,
     ListRecent,
     ListSeries,
     BrowseBack,

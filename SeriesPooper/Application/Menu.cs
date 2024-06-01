@@ -1,5 +1,6 @@
 ﻿using SeriesPooper.Data;
 using SeriesPooper.Enumerations;
+using SeriesPooper.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,13 +41,15 @@ internal class Menu
 
     private static readonly Dictionary<MenuItems, ApplicationAction> _actionDictionary = new()
     {
-        { MenuItems.MENU, ApplicationAction.None},
+        { MenuItems.MENU, ApplicationAction.Menu},
+        { MenuItems.RECENT_WATCHES, ApplicationAction.ListRecent },
         { MenuItems.EXIT, ApplicationAction.Exit }
     };
 
     private static ushort _menuIndex;
     private static ushort _menuCursorLocation;
     private static ushort _menuLength;
+    private static ushort _clearLength;
     private static MenuItems[] _menuItems = [];
 
     public static void Draw()
@@ -104,6 +107,14 @@ internal class Menu
 
         for (int i = 0; i < _menuLength; i++)
         {
+            if (_menuItems[i] == MenuItems.LINE_SEPARATOR)
+            {
+                Console.WriteLine(ApplicationData.LINE_SEPARATOR);
+                ConsoleUtility.LineSeparators[1]++;
+                _menuLength--;
+                continue;
+            }
+
             if (i == index)
             {
                 _menuCursorLocation = (ushort)Console.GetCursorPosition().Top;
@@ -111,13 +122,12 @@ internal class Menu
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.Write(" >> ");
                 Console.ForegroundColor = ConsoleColor.White;
-
-
             }
             else
                 Console.Write("    ");
 
-            Console.WriteLine(items.ElementAt(i).ToString());
+            Console.WriteLine(items.ElementAt(i).ToString().Replace('_', ' '));
+            ConsoleUtility.LineSeparators[1]++;
         }
     }
 

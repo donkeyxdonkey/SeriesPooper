@@ -109,7 +109,14 @@ internal class Application : IApplication
         {
             case ApplicationAction.None:
                 break;
+            case ApplicationAction.Menu:
+                ConsoleUtility.ClearContent();
+                ConsoleUtility.LineSeparators[1] = ConsoleUtility.LineSeparators[0];
+                Menu.DrawMenuItems([MenuItems.RECENT_WATCHES, MenuItems.LIST_SERIES, MenuItems.IMPORT_DATA, MenuItems.EXIT, MenuItems.LINE_SEPARATOR]);
+                break;
             case ApplicationAction.ListRecent:
+                ConsoleUtility.ClearContent();
+                ConsoleUtility.LineSeparators[1] = ConsoleUtility.LineSeparators[0];
                 _serieLibrary.ListRecentlyWatched();
                 break;
             case ApplicationAction.ListSeries:
@@ -135,6 +142,7 @@ internal class Application : IApplication
         _action = _action switch
         {
             ApplicationAction.None => Menu.Act(keyPressed),
+            ApplicationAction.Menu => Menu.Act(keyPressed),
             ApplicationAction.ListRecent => Menu.Act(keyPressed),
             ApplicationAction.ListSeries => ApplicationAction.None, // TODO
             ApplicationAction.BrowseBack => ApplicationAction.None, // TODO

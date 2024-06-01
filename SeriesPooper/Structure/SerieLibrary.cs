@@ -1,6 +1,8 @@
 ﻿using SeriesPooper.Application;
+using SeriesPooper.Data;
 using SeriesPooper.Enumerations;
 using SeriesPooper.Interface;
+using SeriesPooper.Utility;
 
 namespace SeriesPooper.TestClass;
 
@@ -8,8 +10,6 @@ internal class SerieLibrary : ISerieLibrary
 {
     const int SERIE_PADDING = 25;
     const int EPISODE_PADDING = 67;
-
-    const string LINE_SEPARATOR = "-------------------------------------------------------------------------------------------------------------";
 
     #region ----- AUTO PROPERTIES
     public List<Serie> Library { get; set; } = [];
@@ -75,14 +75,20 @@ internal class SerieLibrary : ISerieLibrary
             .Take(15)
             .ToList();
 
-        Console.WriteLine(LINE_SEPARATOR);
+        if (ConsoleUtility.LineSeparators[0] == 0)                                                                      /* behövs bara sättas 1 gång. */
+        {
+            Console.WriteLine(ApplicationData.LINE_SEPARATOR);
+            ConsoleUtility.LineSeparators[0] = Console.CursorTop;
+        }
+
         Console.WriteLine("   MOST RECENTLY WATCHED");
         Console.WriteLine($"    {"SERIE",-SERIE_PADDING} {"EPISODE",-EPISODE_PADDING} DATE");
         foreach (var item in recentEpisodes)
         {
             Console.WriteLine($"    {item.SerieName?.PadRight(SERIE_PADDING)} {item.Episode.Name?.PadRight(EPISODE_PADDING)} {item.Episode.DateWatched:yyyy-MM-dd}");
         }
-        Console.WriteLine(LINE_SEPARATOR);
+        ConsoleUtility.LineSeparators[1] = Console.CursorTop;
+        Console.WriteLine(ApplicationData.LINE_SEPARATOR);
         Menu.DrawMenuItems([MenuItems.MENU, MenuItems.EXIT]);
     }
 }
