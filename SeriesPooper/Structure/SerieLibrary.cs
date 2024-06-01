@@ -22,8 +22,13 @@ internal class SerieLibrary : ISerieLibrary
 
         public override string ToString()
         {
+            foreach (Season season in Seasons)
+            {
+                int count = season.Episodes.Count;
+            }
+
             int combinedEpisodes = Seasons
-                .Sum(x => x.Episodes.Count);
+                .Sum(season => season.Episodes!.Count);
 
             return $"{Name} - Seasons {Seasons!.Count} - Episodes {combinedEpisodes}";
         }
@@ -74,8 +79,7 @@ internal class SerieLibrary : ISerieLibrary
         Console.WriteLine($"    {"SERIE",-SERIE_PADDING} {"EPISODE",-EPISODE_PADDING} DATE");
         foreach (var item in recentEpisodes)
         {
-            string formattedOutput = $"    {item.SerieName?.PadRight(SERIE_PADDING)} {item.Episode.Name?.PadRight(EPISODE_PADDING)} {item.Episode.DateWatched:yyyy-MM-dd}";
-            Console.WriteLine(formattedOutput);
+            Console.WriteLine($"    {item.SerieName?.PadRight(SERIE_PADDING)} {item.Episode.Name?.PadRight(EPISODE_PADDING)} {item.Episode.DateWatched:yyyy-MM-dd}");
         }
         Console.WriteLine(LINE_SEPARATOR);
         Menu.DrawMenuItems([MenuItems.MENU, MenuItems.EXIT]);

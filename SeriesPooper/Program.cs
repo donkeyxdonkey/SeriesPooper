@@ -1,11 +1,18 @@
 ﻿using SeriesPooper.Application;
-using SeriesPooper.Interface;
+using SeriesPooper.Utility;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
-        IApplication app = new Application();
-        app.Start();
+        Console.WindowHeight = Console.LargestWindowHeight - 10;
+
+        if (OperatingSystem.IsWindows())
+            Console.SetWindowPosition(0, 0);
+
+        using (DeferCursor defer = DeferCursor.Defer())
+        {
+            new Application().Start();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using SeriesPooper.Enumerations;
+﻿using SeriesPooper.Data;
+using SeriesPooper.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,11 @@ internal class Menu
     const char BLUE = 'b';
     const char WHITE = 'w';
     const char SKIP = '.';
+
+    const string MENU_CURSOR = ">>";
+    const string CLEAR_CURSOR = "  ";
+
+    const ushort SEPARATOR_LENGTH = 79;
 
     private static string[] menu =
     [
@@ -32,7 +38,16 @@ internal class Menu
         @"............................................................................"
     ];
 
-    private static ushort separatorLength = 79;
+    private static readonly Dictionary<MenuItems, ApplicationAction> _actionDictionary = new()
+    {
+        { MenuItems.MENU, ApplicationAction.None},
+        { MenuItems.EXIT, ApplicationAction.Exit }
+    };
+
+    private static ushort _menuIndex;
+    private static ushort _menuCursorLocation;
+    private static ushort _menuLength;
+    private static MenuItems[] _menuItems = [];
 
     public static void Draw()
     {
@@ -44,7 +59,6 @@ internal class Menu
             {
                 if (M != SKIP && M != prev)
                 {
-
                     Console.ForegroundColor = M switch
                     {
                         BLUE => ConsoleColor.DarkBlue,
@@ -67,7 +81,7 @@ internal class Menu
     {
         const char SEPARATOR = '+';
 
-        for (int i = 0; i < separatorLength; i++)
+        for (int i = 0; i < SEPARATOR_LENGTH; i++)
         {
             Console.ForegroundColor = i % 2 == 0 ? ConsoleColor.Magenta : ConsoleColor.White;
             Console.Write(SEPARATOR);
@@ -82,20 +96,81 @@ internal class Menu
         Console.WriteLine();
     }
 
-    public static void DrawMenuItems(IEnumerable<MenuItems> items, int index = 0)
+    public static void DrawMenuItems(IEnumerable<MenuItems> items, ushort index = 0)
     {
-        for (int i = 0; i < items.Count(); i++)
+        _menuItems = items.ToArray();
+        _menuIndex = index;
+        _menuLength = (ushort)items.Count();
+
+        for (int i = 0; i < _menuLength; i++)
         {
             if (i == index)
             {
+                _menuCursorLocation = (ushort)Console.GetCursorPosition().Top;
+
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.Write(" >> ");
                 Console.ForegroundColor = ConsoleColor.White;
+
+
             }
             else
                 Console.Write("    ");
 
             Console.WriteLine(items.ElementAt(i).ToString());
         }
+    }
+
+    internal static ApplicationAction Act(ConsoleKey keyPressed)
+    {
+        switch (keyPressed)
+        {
+            case ConsoleKey.DownArrow:
+                if (_menuIndex + 1 == _menuLength)
+                    break;
+
+                MoveMenu(keyPressed);
+                break;
+            case ConsoleKey.UpArrow:
+                if (_menuIndex - 1 < 0)
+                    break;
+
+                MoveMenu(keyPressed);
+                break;
+            case ConsoleKey.Enter:
+                return GetAction();
+            case ConsoleKey.Backspace:
+                return ApplicationAction.BrowseBack;
+        }
+
+        return ApplicationAction.None;
+    }
+
+    private static ApplicationAction GetAction()
+    {
+        return _actionDictionary[_menuItems[_menuIndex]];
+    }
+
+    internal static void MoveMenu(ConsoleKey keyPressed)
+    {
+        Console.SetCursorPosition(1, _menuCursorLocation);
+        Console.Write(CLEAR_CURSOR);
+
+        switch (keyPressed)
+        {
+            case ConsoleKey.DownArrow:
+                _menuCursorLocation++;
+                _menuIndex++;
+                break;
+            case ConsoleKey.UpArrow:
+                _menuCursorLocation--;
+                _menuIndex--;
+                break;
+        }
+
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.SetCursorPosition(1, _menuCursorLocation);
+        Console.Write(MENU_CURSOR);
+        Console.ForegroundColor = ConsoleColor.White; // kanske inte behövs...
     }
 }

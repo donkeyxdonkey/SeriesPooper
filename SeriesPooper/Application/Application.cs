@@ -21,8 +21,10 @@ internal class Application : IApplication
 
     #region ----- FIELDS
     private State _state;
+    private ApplicationAction _action;
     private readonly FileInfo _config;
     private readonly SerieLibrary _serieLibrary;
+    private readonly KeyListener _keyListener;
     #endregion
 
     #region ----- CONSTRUCTOR
@@ -31,6 +33,7 @@ internal class Application : IApplication
         _state = State.Idle;
         _config = new(Path.Combine(AppContext.BaseDirectory, CONFIG_FILE));
         _serieLibrary = YamlParser.ParseConfig<SerieLibrary>(_config);
+        _keyListener = new();
     }
     #endregion
 
@@ -46,9 +49,12 @@ internal class Application : IApplication
             Menu.DrawSeparator();
             Menu.DrawEmpty();
 
+            _action = ApplicationAction.ListRecent;
+
             do
             {
                 AwaitAction();
+                HandleAction();
             } while (_state == State.Running);
         }
         catch (Exception ex)
@@ -60,9 +66,39 @@ internal class Application : IApplication
 
     private void AwaitAction()
     {
-        _serieLibrary.ListRecentlyWatched();
-        _serieLibrary.ListSeries();
+        switch (_action)
+        {
+            case ApplicationAction.None:
+                break;
+            case ApplicationAction.ListRecent:
+                _serieLibrary.ListRecentlyWatched();
+                break;
+            case ApplicationAction.ListSeries:
+                _serieLibrary.ListSeries();
+                break;
+            case ApplicationAction.BrowseBack:
+                break;
+            case ApplicationAction.Exit:
+                _state = State.Terminate;
+                break;
+            default:
+                break;
+        }
+    }
 
+    private void HandleAction()
+    {
+        ConsoleKey keyPressed = _keyListener.Listen();
+
+        _action = _action switch
+        {
+            ApplicationAction.None => Menu.Act(keyPressed),
+            ApplicationAction.ListRecent => Menu.Act(keyPressed),
+            ApplicationAction.ListSeries => ApplicationAction.None, // TODO
+            ApplicationAction.BrowseBack => ApplicationAction.None, // TODO
+            ApplicationAction.Exit => ApplicationAction.None, // TODO
+            _ => ApplicationAction.None
+        };
     }
 
     private static void HandleException(Exception ex, string methodName)
