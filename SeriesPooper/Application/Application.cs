@@ -1,6 +1,5 @@
 ﻿using SeriesPooper.Enumerations;
 using SeriesPooper.Interface;
-using SeriesPooper.TestClass;
 using SeriesPooper.Utility;
 using System.Diagnostics;
 
@@ -105,22 +104,24 @@ internal class Application : IApplication
 
     private void AwaitAction()
     {
+        if (_action != ApplicationAction.None && _action != ApplicationAction.Exit)
+        {
+            ConsoleUtility.ClearContent();
+            ConsoleUtility.LineSeparators[1] = ConsoleUtility.LineSeparators[0];
+        }
+
         switch (_action)
         {
             case ApplicationAction.None:
                 break;
             case ApplicationAction.Menu:
-                ConsoleUtility.ClearContent();
-                ConsoleUtility.LineSeparators[1] = ConsoleUtility.LineSeparators[0];
                 Menu.DrawMenuItems([MenuItems.RECENT_WATCHES, MenuItems.LIST_SERIES, MenuItems.IMPORT_DATA, MenuItems.EXIT, MenuItems.LINE_SEPARATOR]);
                 break;
             case ApplicationAction.ListRecent:
-                ConsoleUtility.ClearContent();
-                ConsoleUtility.LineSeparators[1] = ConsoleUtility.LineSeparators[0];
                 _serieLibrary.ListRecentlyWatched();
                 break;
             case ApplicationAction.ListSeries:
-                _serieLibrary.ListSeries();
+                _serieLibrary.ListSeries(Menu.UpdateMenuItemsCallback);
                 break;
             case ApplicationAction.BrowseBack:
                 break;
@@ -144,7 +145,7 @@ internal class Application : IApplication
             ApplicationAction.None => Menu.Act(keyPressed),
             ApplicationAction.Menu => Menu.Act(keyPressed),
             ApplicationAction.ListRecent => Menu.Act(keyPressed),
-            ApplicationAction.ListSeries => ApplicationAction.None, // TODO
+            ApplicationAction.ListSeries => Menu.Act(keyPressed), // TODO
             ApplicationAction.BrowseBack => ApplicationAction.None, // TODO
             ApplicationAction.Exit => ApplicationAction.None, // TODO
             _ => ApplicationAction.None

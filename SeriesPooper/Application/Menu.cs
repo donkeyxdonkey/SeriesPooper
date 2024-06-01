@@ -4,6 +4,7 @@ using SeriesPooper.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -43,6 +44,7 @@ internal class Menu
     {
         { MenuItems.MENU, ApplicationAction.Menu},
         { MenuItems.RECENT_WATCHES, ApplicationAction.ListRecent },
+        { MenuItems.LIST_SERIES, ApplicationAction.ListSeries },
         { MenuItems.EXIT, ApplicationAction.Exit }
     };
 
@@ -129,6 +131,14 @@ internal class Menu
             Console.WriteLine(items.ElementAt(i).ToString().Replace('_', ' '));
             ConsoleUtility.LineSeparators[1]++;
         }
+    }
+
+    public static void UpdateMenuItemsCallback(IEnumerable<MenuItems> items, int count, ushort cursorLocation, ushort index = 0)
+    {
+        _menuCursorLocation = cursorLocation;
+        _menuItems = items.ToArray();
+        _menuIndex = index;
+        _menuLength = (ushort)items.Count();
     }
 
     internal static ApplicationAction Act(ConsoleKey keyPressed)

@@ -1,15 +1,15 @@
-﻿using SeriesPooper.Application;
-using SeriesPooper.Data;
+﻿using SeriesPooper.Data;
 using SeriesPooper.Enumerations;
 using SeriesPooper.Interface;
 using SeriesPooper.Utility;
 
-namespace SeriesPooper.TestClass;
+namespace SeriesPooper.Application;
 
 internal class SerieLibrary : ISerieLibrary
 {
     const int SERIE_PADDING = 25;
     const int EPISODE_PADDING = 67;
+    const int SEASON_PADDING = 30;
 
     #region ----- AUTO PROPERTIES
     public List<Serie> Library { get; set; } = [];
@@ -54,21 +54,48 @@ internal class SerieLibrary : ISerieLibrary
     }
     #endregion
 
-    public void ListSeries()
+    public void ListSeries(Action<IEnumerable<MenuItems>, int, ushort, ushort> callbackUpdateMenu)
     {
         if (Library is null)
             return;
 
-        foreach (Serie serie in Library)
+        var seriesSummary = Library
+            .Select(serie => new
+            {
+                SerieName = serie.Name,
+                SeasonsCount = serie.Seasons.Count,
+                EpisodesWatched = serie.Seasons.Sum(x => x.Episodes.Count(x => x.DateWatched.HasValue)),
+                EpisodesTotal = serie.Seasons.Sum(x => x.Episodes.Count)
+            })
+            .ToList();
+
+        Console.WriteLine("   SERIES");
+        Console.WriteLine($"    {"SERIE",-SERIE_PADDING} {"SEASONS",-SEASON_PADDING} {"WATCHED",-8} TOTAL");
+
+        int index = 0;
+
+        foreach (var item in seriesSummary)
         {
-            Console.WriteLine(serie.ToString());
+            if (index++ == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.Write(" >> ");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+                Console.Write("    ");
+
+            Console.WriteLine($"{item.SerieName?.PadRight(SERIE_PADDING)} {item.SeasonsCount,-SEASON_PADDING} {item.EpisodesWatched,-8} {item.EpisodesTotal}");
         }
+
+        ushort cursorLocation = (ushort)(ConsoleUtility.LineSeparators[0] + 2);
+        callbackUpdateMenu?.Invoke(Enumerable.Repeat(MenuItems.SERIE, seriesSummary.Count), 0, cursorLocation, 0);
     }
 
     public void ListRecentlyWatched()
     {
         var recentEpisodes = Library
-            .SelectMany(serie => serie.Seasons, (serie, season) => new { SerieName = serie.Name, Season = season })
+            .SelectMany(x => x.Seasons, (serie, season) => new { SerieName = serie.Name, Season = season })
             .SelectMany(s => s.Season.Episodes, (s, episode) => new { s.SerieName, Episode = episode })
             .Where(x => x.Episode.DateWatched.HasValue)
             .OrderByDescending(x => x.Episode.DateWatched)

@@ -12,5 +12,6 @@ public enum MenuItems
     DELETE_EPISODE,
     IMPORT_DATA,
     LINE_SEPARATOR,
+    SERIE,
     EXIT
 }
