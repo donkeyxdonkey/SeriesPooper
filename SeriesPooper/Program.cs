@@ -12,7 +12,7 @@ internal class Program
 
         using (DeferCursor defer = DeferCursor.Defer())
         {
-            new Application().Start();
+            new Application(args).Start();
         }
     }
 }

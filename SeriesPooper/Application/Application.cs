@@ -28,12 +28,49 @@ internal class Application : IApplication
     #endregion
 
     #region ----- CONSTRUCTOR
-    public Application()
+    public Application(string[] args)
     {
         _state = State.Idle;
         _config = new(Path.Combine(AppContext.BaseDirectory, CONFIG_FILE));
         _serieLibrary = YamlParser.ParseConfig<SerieLibrary>(_config);
         _keyListener = new();
+
+        ParseArgs(args);
+    }
+
+    private void ParseArgs(string[] args)
+    {
+        if (args.Length == 0)
+            return;
+
+        Console.WriteLine("BEGIN Reading args");
+
+        foreach (string arg in args.Select(arg => arg.ToLower()).ToArray())
+        {
+            switch (arg)
+            {
+                case "--backup":
+                    DirectoryInfo backupDirectory = new(Path.Combine(AppContext.BaseDirectory, "Backup"));
+                    backupDirectory.Create();
+                    FileInfo backup = new(Path.Combine(backupDirectory.FullName, $"{DateTime.Now:yyyy-MM-dd}_{CONFIG_FILE}"));
+                    File.Copy(_config.FullName, backup.FullName, overwrite: true);
+                    break;
+                case "--enable-logging":
+                    DirectoryInfo logsDirectory = new(Path.Combine(AppContext.BaseDirectory, "Logs"));
+                    logsDirectory.Create();
+                    // TODO
+                    break;
+                case "--log-file":
+                    // TODO
+                    break;
+                default:
+                    Console.WriteLine($"Unknown argument: {arg}");
+                    return;
+            }
+        }
+
+        Console.WriteLine("END Reading args");
+        Console.ReadLine(); // debug
     }
     #endregion
 
