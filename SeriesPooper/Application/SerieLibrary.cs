@@ -8,8 +8,9 @@ namespace SeriesPooper.Application;
 internal class SerieLibrary : ISerieLibrary
 {
     const int SERIE_PADDING = 25;
-    const int EPISODE_PADDING = 67;
+    const int EPISODE_PADDING = 50;
     const int SEASON_PADDING = 30;
+    const int SEASON_ID_PADDING = 16;
 
     #region ----- AUTO PROPERTIES
     public List<Serie> Library { get; set; } = [];
@@ -67,10 +68,14 @@ internal class SerieLibrary : ISerieLibrary
                 EpisodesWatched = serie.Seasons.Sum(x => x.Episodes.Count(x => x.DateWatched.HasValue)),
                 EpisodesTotal = serie.Seasons.Sum(x => x.Episodes.Count)
             })
+            .OrderBy(x => x.SerieName)
             .ToList();
 
+        Console.ForegroundColor = ConsoleColor.DarkMagenta;
         Console.WriteLine("   SERIES");
+        Console.ForegroundColor = ConsoleColor.DarkGray;
         Console.WriteLine($"    {"SERIE",-SERIE_PADDING} {"SEASONS",-SEASON_PADDING} {"WATCHED",-8} TOTAL");
+        Console.ForegroundColor = ConsoleColor.White;
 
         int index = 0;
 
@@ -95,8 +100,8 @@ internal class SerieLibrary : ISerieLibrary
     public void ListRecentlyWatched()
     {
         var recentEpisodes = Library
-            .SelectMany(x => x.Seasons, (serie, season) => new { SerieName = serie.Name, Season = season })
-            .SelectMany(s => s.Season.Episodes, (s, episode) => new { s.SerieName, Episode = episode })
+            .SelectMany(serie => serie.Seasons, (serie, season) => new { SerieName = serie.Name, Season = season })
+            .SelectMany(s => s.Season.Episodes, (s, episode) => new { s.SerieName, s.Season.Id, Episode = episode })
             .Where(x => x.Episode.DateWatched.HasValue)
             .OrderByDescending(x => x.Episode.DateWatched)
             .Take(15)
@@ -108,11 +113,15 @@ internal class SerieLibrary : ISerieLibrary
             ConsoleUtility.LineSeparators[0] = Console.CursorTop;
         }
 
+        Console.ForegroundColor = ConsoleColor.DarkMagenta;
         Console.WriteLine("   MOST RECENTLY WATCHED");
-        Console.WriteLine($"    {"SERIE",-SERIE_PADDING} {"EPISODE",-EPISODE_PADDING} DATE");
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        Console.WriteLine($"    {"SERIE",-SERIE_PADDING} {"EPISODE",-EPISODE_PADDING} {"SEASON",-SEASON_ID_PADDING} DATE");
+        Console.ForegroundColor = ConsoleColor.White;
+
         foreach (var item in recentEpisodes)
         {
-            Console.WriteLine($"    {item.SerieName?.PadRight(SERIE_PADDING)} {item.Episode.Name?.PadRight(EPISODE_PADDING)} {item.Episode.DateWatched:yyyy-MM-dd}");
+            Console.WriteLine($"    {item.SerieName?.PadRight(SERIE_PADDING)} {item.Episode.Name?.PadRight(EPISODE_PADDING)} S{item.Id,-SEASON_ID_PADDING} {item.Episode.DateWatched:yyyy-MM-dd}");
         }
         ConsoleUtility.LineSeparators[1] = Console.CursorTop;
         Console.WriteLine(ApplicationData.LINE_SEPARATOR);
