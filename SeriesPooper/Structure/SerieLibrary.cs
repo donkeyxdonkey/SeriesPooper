@@ -16,6 +16,7 @@ internal class SerieLibrary : ISerieLibrary
 
     internal class Serie
     {
+        // TODO: gör separata klasser när klar.
         public string? Name { get; set; }
 
         public List<Season> Seasons { get; set; } = [];

@@ -10,6 +10,8 @@ internal class Program
         if (OperatingSystem.IsWindows())
             Console.SetWindowPosition(0, 0);
 
+        Console.Clear();
+
         using (DeferCursor defer = DeferCursor.Defer())
         {
             new Application(args).Start();

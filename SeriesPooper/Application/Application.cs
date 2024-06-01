@@ -32,10 +32,9 @@ internal class Application : IApplication
     {
         _state = State.Idle;
         _config = new(Path.Combine(AppContext.BaseDirectory, CONFIG_FILE));
+        ParseArgs(args);
         _serieLibrary = YamlParser.ParseConfig<SerieLibrary>(_config);
         _keyListener = new();
-
-        ParseArgs(args);
     }
 
     private void ParseArgs(string[] args)
@@ -54,6 +53,7 @@ internal class Application : IApplication
                     backupDirectory.Create();
                     FileInfo backup = new(Path.Combine(backupDirectory.FullName, $"{DateTime.Now:yyyy-MM-dd}_{CONFIG_FILE}"));
                     File.Copy(_config.FullName, backup.FullName, overwrite: true);
+                    Console.WriteLine($"Backup performed: {backup.FullName}");
                     break;
                 case "--enable-logging":
                     DirectoryInfo logsDirectory = new(Path.Combine(AppContext.BaseDirectory, "Logs"));
@@ -70,7 +70,8 @@ internal class Application : IApplication
         }
 
         Console.WriteLine("END Reading args");
-        Console.ReadLine(); // debug
+        Console.ReadLine();
+        Console.Clear();
     }
     #endregion
 
